@@ -60,7 +60,7 @@ tidydatadftb<-tbl_df(TidyDataX)
 
 ############Gruped by Subject and Activity and getss the mean of all Columns
 groupedByActivityAndSubj<-group_by(TidyDataX,ActivitiesOrdered, subjects )%>%summarise_all(list(mean))
-str(groupedByActivityAndSubj)
+
 
 
 
