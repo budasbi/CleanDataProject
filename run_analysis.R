@@ -1,4 +1,4 @@
-
+library(dplyr)
 #Merges the training and the test sets to create one data set.
 urlInitialFiles<-"https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 DestPath<-paste0(getwd(),"/InitialFile.zip")
@@ -44,22 +44,23 @@ DataX<-cbind(subjects,DataX)##Se añade como primera columna, la columna de los 
 DataActivity<-read.table(paste0(resultdirectory, "y.txt"), header = FALSE, sep = ",", skip = 1)##Se Cargan las Actividades
 Activitylabels<-read.table(paste0(getwd(),"/UCI HAR Dataset/activity_labels.txt"), header = FALSE, sep = "")##Se Cargan las Actividades
 ActivityWithLabels<-merge(DataActivity,Activitylabels, by.x = "V2", by.y = "V1")
+
 select(ActivityWithLabels, V1, V2.y)%>%arrange(V1)
 ActivitiesOrdered<-select(ActivityWithLabels, V1, V2.y)%>%arrange(V1)
 ActivitiesOrdered<-ActivitiesOrdered[,2]
 DataX<-cbind(ActivitiesOrdered,DataX)
 
-
-names(DataX)
-length(grep("([Mm]ean|[Ss]td)|subjects|ActivitiesOrdered", names(DataX)))
+rm(ActivitiesOrdered,Activitylabels,DataActivity,encabezados,Subject,subjects)
+#length(grep("([Mm]ean|[Ss]td)|subjects|ActivitiesOrdered", names(DataX)))
 TidyDataX<-DataX[,grep("([Mm]ean|[Ss]td)|subjects|ActivitiesOrdered", names(DataX))]
-length(names(TidyDataX))
+
 
 ###############################TidyData for X
 tidydatadftb<-tbl_df(TidyDataX)
 
 ############Gruped by Subject and Activity and getss the mean of all Columns
 groupedByActivityAndSubj<-group_by(TidyDataX,ActivitiesOrdered, subjects )%>%summarise_all(list(mean))
+str(groupedByActivityAndSubj)
 
 
 
